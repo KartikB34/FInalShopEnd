@@ -1,5 +1,5 @@
 import './App.css';
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,11 +31,16 @@ function App() {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const user = localStorage.getItem('user');
+  const type = user && user.type;
+
   return (
     <div>
       <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className='min-h-[70vh]'>
         <Routes>
+          {type == "customer" ? <Route path="/customer" element={<Customer />}></Route>
+            : <Route path="/dashboard" element={<Dashboard />}></Route>}
           <Route path="/" element={<Login />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<Signup />}></Route>
@@ -46,17 +51,17 @@ function App() {
           <Route path="/our-mission" element={<Ourmission />}></Route>
           <Route path="/why-us" element={<Whyus />}></Route>
 
-          <Route path="/dashboard" element={<Dashboard sidebarOpen={sidebarOpen} />}>
+          {user && <Route path="/dashboard" element={<Dashboard sidebarOpen={sidebarOpen} />}>
             <Route path='' element={<DashHome />} />
             <Route path='inventory' element={<Inventory />} />
             <Route path='customer-insights' element={<CustomerInsights />} />
             <Route path='sales-insights' element={<SalesInsights />} />
             <Route path='profile' element={<Profile />} />
             <Route path='settings' element={<Settings />} />
-          </Route>
+          </Route>}
 
-          <Route path="/customer" element={<Customer />}></Route>
-          <Route exact path="/customer/:id" element={<CustomerID />}></Route>
+          {user && <Route path="/customer" element={<Customer />}></Route>}
+          {user && <Route exact path="/customer/:id" element={<CustomerID />}></Route>}
         </Routes>
       </div>
       <Footer />
